@@ -1,0 +1,9 @@
+what I want the csv to look like 
+elo, goal diff, seniors, head to head, O-elo, O-goal diff, O-seniors, result  
+
+elo will have to be run through the script 
+goal diff will need to be calculated 
+head to head is season based 
+
+
+it will prob be a good idea to do this season by season with one league 

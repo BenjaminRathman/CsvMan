@@ -24,9 +24,7 @@ class Csv:
         else:
             self.filepath = filepath
 
-# Example usage:
-csv_instance = Csv(name="example")
-print(csv_instance.filepath)
+
 
         
 
