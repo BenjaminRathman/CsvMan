@@ -1,28 +1,44 @@
 import csv
-import os 
+import os
+import pandas as pd  # type: ignore
 
-
-class Csv:
-    def __init__(self, name, filepath=None):
+class CsvFile:
+    def __init__(self, name):
         self.name = name
-        
-        # Handle empty filepath with valid name - create new file
-        if filepath is None and name:
-            # Create filepath using current directory and name
-            self.filepath = os.path.join(os.getcwd(), f"{name}.csv")
-            # Create empty CSV file
-            with open(self.filepath, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([])  # Write empty row to initialize file
-            print(f"Created new CSV file: {self.filepath}")
-            
-        # Handle invalid filepath
-        elif filepath and not os.path.exists(filepath):
-            raise FileNotFoundError(f"The file path does not exist: {filepath}")
-            
-        # Valid filepath provided
-        else:
-            self.filepath = filepath
+        self.filepath = self._ensure_file_exists(name)
+
+    def _ensure_file_exists(self, name):
+        """
+        Check if the file exists in the folder. Depending on the file type:
+        - If it's an Excel file (.xls/.xlsx), convert it to CSV.
+        - If it's a CSV file, just attach its file path.
+        - If it doesn't exist, create an empty CSV file with that name.
+        """
+        for extension in ['.csv', '.xls', '.xlsx']:
+            potential_path = os.path.join(os.getcwd(), f"{name}{extension}")
+            if os.path.exists(potential_path):
+                if extension in ['.xls', '.xlsx']:
+                    csv_path = os.path.join(os.getcwd(), f"{name}.csv")
+                    self._excel_to_csv(potential_path, csv_path)
+                    print(f"Converted Excel file to CSV: {csv_path}")
+                    return csv_path
+                elif extension == '.csv':
+                    print(f"CSV file found: {potential_path}")
+                    return potential_path
+
+        # If no file exists, create a new CSV file
+        csv_path = os.path.join(os.getcwd(), f"{name}.csv")
+        with open(csv_path, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([])  # Initialize with an empty row
+        print(f"Created new CSV file: {csv_path}")
+        return csv_path
+
+    @staticmethod
+    def _excel_to_csv(input_excel_filepath, output_csv_filepath):
+        """Convert an Excel file to a CSV file."""
+        df = pd.read_excel(input_excel_filepath)
+        df.to_csv(output_csv_filepath, index=False)
 
 
 

@@ -1,15 +1,12 @@
 import initcsv
+import csvedit
 
 
-def create(name):
-    return initcsv.Csv(name)  # Return the Csv instance
+
+def main():
+    S1L2Sorted = initcsv.CsvFile("S1L2Sorted")
+    SS1League = initcsv.CsvFile("SS1League")
+    csvedit.filter_rows_by_multiple_values(SS1League.filepath, S1L2Sorted.filepath,"AwayTeamId",["2","10","17","18","21","24"])
 
 
-def main(lst_of_csv):
-    csv_dict = {}  # Initialize an empty dictionary
-    for name in lst_of_csv:
-        csv_instance = create(name)  # Create the Csv instance
-        csv_dict[csv_instance.name] = csv_instance  # Use the name attribute from the instance
-        
-
-
+main()
